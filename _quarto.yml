@@ -1,5 +1,5 @@
 project:
-  type: website
+  type: site
   output-dir: _site
 
 website:

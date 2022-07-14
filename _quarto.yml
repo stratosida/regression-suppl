@@ -1,8 +1,9 @@
 project:
   type: website
+  output-dir: _site
 
 website:
-  title: "mysite"
+  title: "IDA regression manuscript"
   navbar:
     left:
       - href: index.qmd
@@ -11,7 +12,7 @@ website:
       - Bact_suppl.qmd
 
 format:
-  html:
+   html:
     theme: cosmo
     css: styles.css
     toc: true

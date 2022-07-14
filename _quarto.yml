@@ -20,7 +20,6 @@ site:
     contents:
       - index.qmd
       - Bact_suppl.qmd
-      - about.qmd
 
 format:
   html:

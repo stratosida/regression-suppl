@@ -2,22 +2,29 @@ project:
   type: site
   output-dir: _site
 
-website:
+
+execute:
+  freeze: true
+
+site:
   title: "IDA regression manuscript"
-  navbar:
-    left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+  
+  sidebar:
+    style: "docked"
+    background: light
+    search: true
+    collapse-level: 2
+    tools:
+      - icon: github
+        href: https://github.com/stratosida/regression-manuscript
+    contents:
+      - index.qmd
       - Bact_suppl.qmd
+      - about.qmd
 
 format:
-   html:
+  html:
     theme: cosmo
     css: styles.css
     toc: true
-
-execute:
-  freeze: auto
-
 

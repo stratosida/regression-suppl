@@ -1,24 +1,10 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site"
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Manuscript: supplemental materials",
+    "title": "About",
     "section": "",
     "text": "This site contains supplemental material to support the IDA regression manuscript."
-  },
-  {
-    "objectID": "regression-manuscript.html#quarto",
-    "href": "regression-manuscript.html#quarto",
-    "title": "Regression manuscript",
-    "section": "Quarto",
-    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
   },
   {
     "objectID": "Bact_suppl.html#overview",

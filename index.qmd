@@ -1,5 +1,5 @@
 ---
-title: "Manuscript: supplemental materials"
+title: "About"
 ---
 
 This site contains supplemental material to support the IDA regression manuscript. 

@@ -179,6 +179,8 @@
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define key predictors without pseudo-log trafo ('orig') and transformed ('trans'), replace WBC with WBC_noNEU</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>key_predictors_orig  <span class="ot">&lt;-</span> bact_variables<span class="sc">$</span>vip_vars <span class="sc">%&gt;%</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="st">'WBC'</span>, <span class="st">'WBC_noNEU'</span>)</span>
@@ -200,6 +202,7 @@
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>n_excl_cases <span class="ot">&lt;-</span> <span class="fu">dim</span>(c_bact)[<span class="dv">1</span>] <span class="sc">-</span> <span class="fu">dim</span>(model_df_complete)[<span class="dv">1</span>] </span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>pct_excl <span class="ot">&lt;-</span> <span class="fu">round</span>((<span class="dv">1</span><span class="sc">-</span>(<span class="fu">dim</span>(model_df_complete)[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">dim</span>(c_bact)[<span class="dv">1</span>])) <span class="sc">*</span> <span class="dv">100</span>,<span class="dv">1</span>)</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>pct_complete <span class="ot">&lt;-</span> <span class="fu">dim</span>(model_df_complete)[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">dim</span>(c_bact)[<span class="dv">1</span>] <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>In the following examples we use the Bacteremia data with complete observations regarding the key predictors WBC_noNEU, Alter, BUN, KREA, NEU, PLT, which represent 93.9% of the whole dataset. We will fit a global logistic regression model with the outcome ‘BC’ and the key predictors as covariates. We will use pseudo-log transformations as suggested in the IDA. Within the model, all key predictors will be transformed by fractional polynomials of order 1 (df = 2).</p>
 <p>The aim of the examples is to showcase how decisions derived from IDA influence the results of the fitted model.</p>
@@ -210,6 +213,8 @@
 <section id="model-summary" class="level3">
 <h3 class="anchored" data-anchor-id="model-summary">Model Summary</h3>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>global_formula <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">'BC ~ '</span>, <span class="fu">paste</span>(<span class="fu">paste0</span>(<span class="fu">paste0</span>(<span class="st">'fp('</span>, key_predictors_trans), <span class="st">',df=2)'</span>), <span class="at">collapse =</span> <span class="st">' + '</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>fit_mfp_complete <span class="ot">&lt;-</span> <span class="fu">mfp</span>(<span class="fu">as.formula</span>(global_formula),</span>
@@ -221,6 +226,7 @@
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit_mfp_complete) <span class="sc">%&gt;%</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_model_table</span>(<span class="at">title =</span> <span class="st">'global model'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div id="cuctktzgwl" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
@@ -692,6 +698,8 @@
 </table>
 </div>
 </div>
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Mc Fadden's R²</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#r_squared_mcfadden &lt;- with(summary(fit_mfp_complete), 1 - deviance/null.deviance)</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -701,6 +709,7 @@
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>p_model_complete <span class="ot">&lt;-</span> <span class="fu">logreg_summary_plot</span>(fit_mfp_complete, <span class="st">'global model'</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>p_model_complete</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <p><img src="Bact_suppl_files/figure-html/global%20model-1.png" class="img-fluid" width="192"></p>
 </div>
@@ -710,6 +719,8 @@
 <h3 class="anchored" data-anchor-id="functional-forms-of-global-model">Functional forms of global model</h3>
 <p>We now take a look at the functional forms of the covariates in the global model, which are determined by the fp algorithm. Besides scaling factors, only for t_WBC_noNEU the fp algorithm chose a non-linear transformation (note the ‘^0.5’ in the term column). This means all other covariates enter the model in a linear fashion. In the following effect plots, each variable is adjusted to the median of the other variables in the model.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># medians of all key predictors, selected variables will be adjusted to these medians in effect plots</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model_df_medians <span class="ot">&lt;-</span> model_df_complete[,<span class="fu">unique</span>(<span class="fu">c</span>(key_predictors_orig, key_predictors_trans))] <span class="sc">%&gt;%</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_all</span>(median)</span>
@@ -755,6 +766,7 @@
 <span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(key_predictors_trans[i] <span class="sc">==</span> <span class="st">'PLT'</span>){ p_effect_PLT <span class="ot">&lt;-</span> p} <span class="co"># save for example 5</span></span>
 <span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <p><img src="Bact_suppl_files/figure-html/global%20model%20functional%20forms-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -780,12 +792,15 @@
 <h2 class="anchored" data-anchor-id="example-1-to-transform-or-not-to-transform">Example 1: to transform or not to transform</h2>
 <p>Only for one out of the six key predictors did the fp algorithm chose a non-linear transformation. But out of those six variables, four were pseudo-log transformed before entering the model. In the first example we want to compare the global model to a model using the key predictors on their original scale.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit the complete mfp model using only original, non-transformed variables</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>fit_mfp_complete_notrans <span class="ot">&lt;-</span> <span class="fu">mfp</span>(<span class="fu">as.formula</span>(global_formula <span class="sc">%&gt;%</span> <span class="fu">str_replace_all</span>(<span class="st">'t</span><span class="sc">\\</span><span class="st">_'</span>, <span class="st">''</span>)),</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> model_df_complete,</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">family =</span> binomial)</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit_mfp_complete_notrans) <span class="sc">%&gt;%</span> <span class="fu">gt_model_table</span>(<span class="st">'global model without pseudo-log tranformations'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div id="hkfimitszp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
@@ -1260,9 +1275,12 @@
 </div>
 <p>Note the different fp-transformation arising when the key predictors are not pseudo-log transformed. On the original scale, three covariates instead of one now enter the model via a non-linear fp-transformation. This suggests that a transfromation prior to the regression model ‘outsources’ the need for transformations within the model. Now let us compare the model performances.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p_model_notrans <span class="ot">&lt;-</span> <span class="fu">logreg_summary_plot</span>(fit_mfp_complete_notrans, <span class="st">'global model </span><span class="sc">\n</span><span class="st">without pseudo-log </span><span class="sc">\n</span><span class="st">transformations'</span>) <span class="co"># maybe side by side with global model?</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>p_model_complete <span class="sc">+</span> <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,.<span class="dv">8</span>)) <span class="sc">+</span> p_model_notrans <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span> <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,.<span class="dv">8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <p><img src="Bact_suppl_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="384"></p>
 </div>
@@ -1270,6 +1288,8 @@
 <p>With regards to McFadden’s R² and the AUC, the differences between the two approaches is marginal.</p>
 <p>Next we will compare the differences of the functional forms in the two models for those covariates where a pseudo-log transformation was suggested in IDA. We will look at the log odds for bacteremia by each covariate on the original and the transformed scale, and compare the global model using the original and the pseudo-log transformed covariates. Each variable is adjusted for the median of all other variables used.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(key_predictors_trans)){</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(key_predictors_orig[i] <span class="sc">!=</span> key_predictors_trans[i]){</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -1370,6 +1390,7 @@
 <span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <p><img src="Bact_suppl_files/figure-html/trafo%20of%20variables-1.png" class="img-fluid" width="960"></p>
 </div>
@@ -1388,6 +1409,8 @@
 <h2 class="anchored" data-anchor-id="example-2-the-support-of-a-model-determines-what-it-can-explain">Example 2: the support of a model determines what it can explain</h2>
 <p>Next we compare the global model to a model were for an important variable, in our case we chose age, the variable support is reduced to the central 50% of the data (i.e.&nbsp;data within the 25% and 75% quantiles). Again, in the reduced models we use the same fp-transformations as in the global model.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>m_pct <span class="ot">&lt;-</span> .<span class="dv">5</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>sel_central <span class="ot">&lt;-</span> (model_df_complete<span class="sc">$</span>Alter <span class="sc">&gt;</span> <span class="fu">quantile</span>(model_df_complete<span class="sc">$</span>Alter, <span class="fl">0.5</span><span class="sc">-</span>m_pct<span class="sc">/</span><span class="dv">2</span>)) <span class="sc">&amp;</span> </span>
@@ -1426,6 +1449,7 @@
 <span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="dv">2</span>, <span class="at">decimals =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="dv">3</span>, <span class="at">decimals =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div id="mhwqvfwlfy" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
@@ -1864,6 +1888,8 @@
 </table>
 </div>
 </div>
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p_ex2 <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">BC =</span> y_complete,</span>
@@ -1888,6 +1914,7 @@
 <span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">'BC'</span>)</span>
 <span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>p_ex2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <p><img src="Bact_suppl_files/figure-html/prediction%20validity-1.png" class="img-fluid" width="576"></p>
 </div>
@@ -1897,7 +1924,10 @@
 <h2 class="anchored" data-anchor-id="example-3-the-limits-of-mulitiple-imputation">Example 3: the limits of mulitiple imputation</h2>
 <p>To show the effect of multiple imputation if the number of missing values is high, we construct a dataset with 50% artificially generated missing values in one variable. First, recall the output of the complete model, relying on the Bacteremia data with complete cases regarding the key predictors.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit_mfp_complete) <span class="sc">%&gt;%</span> <span class="fu">gt_model_table</span>(<span class="st">'global model'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div id="lvxliwfzxs" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
@@ -2372,6 +2402,8 @@
 </div>
 <p>Creatinine (‘KREA’) is significant at a level that might not survive substantial missingness. We thus create a dataset were we artificially introduce 50% missing creatinine values, missing completely at random.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create 50% missings for t_KREA</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>) <span class="co"># with seed=3, z-statistic for t_KREA is 1.48</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>model_df_missings <span class="ot">&lt;-</span> model_df_complete <span class="sc">%&gt;%</span></span>
@@ -2382,15 +2414,21 @@
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NA</span></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Next we fit a ‘complete case’ model in the case of missing creatinine data, using the fp-transformations from the global model.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fit_mfp_missing <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">as.formula</span>(global_formula_fp), <span class="co">#use same fp-trafos as in global model</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> model_df_missings,</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>Now we impute the missing creatinine data using MICE with 50 imputations, fit the model using the fp-transformations from the global model and pool the results.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># impute</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>imp_data <span class="ot">&lt;-</span> <span class="fu">mice</span>(model_df_missings <span class="sc">%&gt;%</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">select</span>(BC, key_predictors_trans), </span>
@@ -2404,9 +2442,12 @@
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># pooled results</span></span>
 <span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>fit_pooled <span class="ot">&lt;-</span> <span class="fu">pool</span>(imp_fits)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>We now can compare the outputs of the complete model, the complete model with missing data (i.e.&nbsp;only half of the original complete data is used), and the imputed model.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(fit_mfp_complete)  <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">'global model'</span>),</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(fit_mfp_missing) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">'missing, complete cases'</span>),</span>
@@ -2427,6 +2468,7 @@
 <span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">3</span></span>
 <span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_scientific</span>(<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div id="mrhrnmqkka" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
@@ -2988,16 +3030,21 @@
 </div>
 <p>The z-statistic for creatinine drops from 2.98 to 1.49 when half the data is missing. Also in other variables the z-statistic is less extreme in the ‘missing, complete case analysis’ compared to the global model. The interesting observations is that MI recreates estimates and standard errors very close to the global model in most variables, but not in the one that was being imputed, namely creatinine. In variable selection, chreatinine, which is highly significant in the ‘true’ model, is likely to be dropped, based on the imputed data.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#pearson &amp; spearman correalation of CREA and BUN</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>r_pearson  <span class="ot">&lt;-</span> <span class="fu">cor</span>(model_df_complete<span class="sc">$</span>t_KREA, model_df_complete<span class="sc">$</span>BUN, <span class="at">method =</span> <span class="st">'pearson'</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>r_spearman <span class="ot">&lt;-</span> <span class="fu">cor</span>(model_df_complete<span class="sc">$</span>t_KREA, model_df_complete<span class="sc">$</span>BUN, <span class="at">method =</span> <span class="st">'spearman'</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section id="example-4-interpretation-of-regression-coefficient-size" class="level2">
 <h2 class="anchored" data-anchor-id="example-4-interpretation-of-regression-coefficient-size">Example 4: Interpretation of regression coefficient ‘size’</h2>
 <p>The variables WBC_noNEU and t_WBC_noNEU are on two very different scales:</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>p_ex4 <span class="ot">&lt;-</span> model_df_complete <span class="sc">%&gt;%</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(key_predictors_trans[<span class="fu">str_detect</span>(key_predictors_trans, <span class="st">'t_'</span>)]) <span class="sc">%&gt;%</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.numeric) <span class="sc">%&gt;%</span></span>
@@ -3009,14 +3056,18 @@
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">strip.placement =</span> <span class="st">'outside'</span>)</span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>p_ex4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <p><img src="Bact_suppl_files/figure-html/ex%204%20plots-1.png" class="img-fluid" width="576"></p>
 </div>
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># standardized regression coefficients</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit_mfp_complete) <span class="sc">%&gt;%</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate) <span class="sc">%&gt;%</span></span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">!=</span> <span class="st">'(Intercept)'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 2
   term                       estimate
@@ -3028,6 +3079,8 @@
 5 I(((PLT + 1)/100)^1)        -0.0789
 6 I(t_BUN^1)                   0.226 </code></pre>
 </div>
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>model_df_complete <span class="sc">%&gt;%</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">WBC_noNEU =</span> <span class="fu">sd</span>(((t_WBC_noNEU <span class="sc">+</span> <span class="fl">0.1</span>)<span class="sc">^</span><span class="fl">0.5</span>) <span class="sc">*</span> fit_mfp_complete<span class="sc">$</span>coefficients[<span class="dv">2</span>]),</span>
@@ -3042,6 +3095,7 @@
 <span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(</span>
 <span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>, <span class="at">decimals =</span> <span class="dv">4</span></span>
 <span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div id="axgrpwnzia" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
@@ -3485,6 +3539,8 @@
 </div>
 <p>Let us recall the two estimates to the covariates WBC_noNEU and t_WBC_noNEU.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(fit_mfp_complete) <span class="sc">%&gt;%</span> <span class="fu">select</span>(term, estimate),</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(fit_mfp_complete_notrans) <span class="sc">%&gt;%</span> <span class="fu">select</span>(term, estimate)</span>
@@ -3492,6 +3548,7 @@
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(term, <span class="st">'WBC'</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  gt <span class="sc">%&gt;%</span></span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="dv">2</span>, <span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div id="vsztgjtwyo" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
@@ -3928,12 +3985,17 @@
 <p>(Suggestion: show this with models without fp trafo?)</p>
 <p>Because the fp-transformations further complicate the interpretation of the regression coefficients, let us consider two logisitc regression models with WBC_noNEU and t_WBC_noNEU as single covariate, respectively.</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fit_wbc_orig <span class="ot">&lt;-</span> <span class="fu">glm</span>(BC <span class="sc">~</span> WBC_noNEU,</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">data =</span> model_df_complete,</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">family =</span> binomial) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 </div>
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fit_wbc_trans <span class="ot">&lt;-</span> <span class="fu">glm</span>(BC <span class="sc">~</span> t_WBC_noNEU,</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> model_df_complete,</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">family =</span> binomial) </span>
@@ -3946,6 +4008,7 @@
 <span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate) <span class="sc">%&gt;%</span></span>
 <span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  gt <span class="sc">%&gt;%</span></span>
 <span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(estimate, <span class="at">decimals =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div id="inlyyobpkb" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
@@ -4378,7 +4441,10 @@
 </table>
 </div>
 </div>
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fit_wbc_orig<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>WBC_noNEU 
     -0.56 </code></pre>
@@ -4390,6 +4456,8 @@
 <h2 class="anchored" data-anchor-id="example-5-plot-of-functional-form-should-be-resticted-to-areas-with-high-density">Example 5: Plot of functional form should be resticted to areas with high density</h2>
 <p>The functional forms have wide confidence intervals when the data is sparse. In presentations of the effects, plots of the functional forms can be limited to areas with high density. In this analysis, PLT was very sparse above ~800 [UNITS], which is reflected in a large confidence interval for high PLT values. In the effect plot PLT values could be limited to values &lt;800 [UNITS].</p>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fit_linear_complete <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">'BC ~ '</span>, <span class="fu">paste</span>(key_predictors_trans, <span class="at">collapse =</span> <span class="st">'+'</span>))),</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data =</span> model_df_complete,</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">family =</span> <span class="st">'binomial'</span>) </span>
@@ -4444,6 +4512,7 @@
 <span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a><span class="fu">logreg_summary_plot</span>(fit_linear_complete, <span class="st">'linear model'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Setting levels: control = 0, case = 1</code></pre>
 </div>
@@ -4456,13 +4525,18 @@
 <div class="cell-output-display">
 <p><img src="Bact_suppl_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>p_ex5  <span class="sc">+</span> (p_ex5 <span class="sc">+</span> <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">quantile</span>(model_df_complete<span class="sc">$</span>t_WBC_noNEU, <span class="fu">c</span>(.<span class="dv">05</span>,.<span class="dv">95</span>)), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">4.5</span>, <span class="sc">-</span><span class="fl">0.5</span>))) <span class="sc">+</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">'collect'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <p><img src="Bact_suppl_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
+<p></p><details>
+<summary>Show the code</summary><p></p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r cell-code code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#p_effect_PLT + p_effect_PLT + coord_cartesian(xlim = c(0,800)) # not working because of ggplot bug</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">#workaround because of ggplot bug</span></span>
@@ -4472,6 +4546,7 @@
 <span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_ribbon</span>(<span class="at">fill =</span> <span class="fu">gray</span>(.<span class="dv">9</span>)) <span class="sc">+</span> </span>
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <p><img src="Bact_suppl_files/figure-html/example%205%20plots-1.png" class="img-fluid" width="1152"></p>
 </div>

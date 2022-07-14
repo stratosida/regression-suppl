@@ -56,27 +56,31 @@ scaled_brier <- function(model){
 
 ## Overview
 
-```{r}
+```{r overview}
 # define key predictors without pseudo-log trafo ('orig') and transformed ('trans'), replace WBC with WBC_noNEU
 key_predictors_orig  <- bact_variables$vip_vars %>%
   str_replace('WBC', 'WBC_noNEU')
+
 key_predictors_trans <- bact_transformed$vip_vars %>%
   str_replace('WBC', 'WBC_noNEU')
 
 # include only complete cases
-model_df_complete <- c_bact[c('BC', unique(c(bact_variables$vip_vars, bact_transformed$vip_vars)))] %>%
-  mutate(
-    WBC_noNEU = WBC - NEU
-  ) %>%
+model_df_complete <-
+  c_bact[c('BC', unique(c(
+    bact_variables$vip_vars, bact_transformed$vip_vars
+  )))] %>%
+  mutate(WBC_noNEU = WBC - NEU) %>%
   na.omit
 
 model_df_complete <- model_df_complete %>%
-  mutate(
-    t_WBC_noNEU = pseudo_log(WBC_noNEU, ida_trans(model_df_complete$WBC_noNEU)$const) 
-  )
+  mutate(t_WBC_noNEU = pseudo_log(WBC_noNEU,
+                                  ida_trans(model_df_complete$WBC_noNEU)$const))
 
-n_excl_cases <- dim(c_bact)[1] - dim(model_df_complete)[1] 
-pct_excl <- round((1-(dim(model_df_complete)[1] / dim(c_bact)[1])) * 100,1)
+n_excl_cases <- dim(c_bact)[1] - dim(model_df_complete)[1]
+
+pct_excl <-
+  round((1 - (dim(model_df_complete)[1] / dim(c_bact)[1])) * 100, 1)
+
 pct_complete <- dim(model_df_complete)[1] / dim(c_bact)[1] * 100
 ```
 
@@ -90,7 +94,7 @@ The global model will be fitted by the *mfp* function. If not indicated otherwis
 
 ### Model Summary
 
-```{r global model, message = FALSE, warning = FALSE, fig.width=2, fig.height=3}
+```{r global model, message = FALSE, warning = FALSE, fig.width=4, fig.height=3}
 
 global_formula <- paste0('BC ~ ', paste(paste0(paste0('fp(', key_predictors_trans), ',df=2)'), collapse = ' + '))
 
